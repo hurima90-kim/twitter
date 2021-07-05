@@ -1,12 +1,25 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import AppRouter from "components/Router"
 import { authService } from "../fBase";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser)
+    const [init, setInit] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    // 유저 정보 저장되어있는지 확인 ( 회원가입, 로그인 )
+    useEffect(() => {
+      authService.onAuthStateChanged((user) => {
+        if(user){
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false)
+        }
+        setInit(true)
+      })
+    }, [])
     return (
       <> 
-        <AppRouter isLoggedIn = { isLoggedIn } />
+        {init ? <AppRouter isLoggedIn = { isLoggedIn } /> : "Initializing..."}
         <footer>&copy; {new Date().getFullYear()} Twitter</footer> 
       </>
     )
