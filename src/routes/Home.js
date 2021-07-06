@@ -1,5 +1,6 @@
 import { dbService } from 'fBase';
 import React, { useState, useEffect } from 'react'
+import Tweet from 'components/Tweet';
 
 // function compoenet
 const Home = ({ userObj }) => {
@@ -21,7 +22,7 @@ const Home = ({ userObj }) => {
         dbService.collection("tweets").add({
             text: tweet,
             createdAt: Date.now(),
-            createId: userObj.uid,
+            creatorId: userObj.uid,
         })
         setTweet("");
     }
@@ -39,9 +40,7 @@ const Home = ({ userObj }) => {
             </form>
             <div>
                 {tweets.map((tweet) => (
-                    <div key={tweet.id}>
-                        <h4>{tweet.text}</h4>
-                    </div>
+                    <Tweet key={tweet.id} tweetObj={tweet} isOwner={tweet.creatorId === userObj.uid} />
                 ))}
             </div>
         </div>
